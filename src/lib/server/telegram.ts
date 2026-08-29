@@ -115,7 +115,10 @@ export interface OrderForTelegram {
 }
 
 function esc(s: string): string {
-  return s.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 function money(amount: number, symbol: string): string {

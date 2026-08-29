@@ -28,6 +28,9 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/next.config.ts ./next.config.ts
+# Migrations: embedded in the bundle (src/lib/db/migrations.ts), .sql files
+# copied as defense-in-depth for any tooling that reads them from disk.
+COPY --from=build /app/src/lib/db/migrations ./src/lib/db/migrations
 # Persistent volume target (attach a Railway volume at /data)
 RUN mkdir -p /data && chown app:app /data
 USER app
