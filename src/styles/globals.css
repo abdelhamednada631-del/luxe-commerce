@@ -1,0 +1,377 @@
+@import "tailwindcss";
+
+/* ── LUXE design tokens ───────────────────────────────────────────
+   Warm, restrained luxury palette. The accent color is overridden
+   at runtime by the admin-configured brand color (injected as an
+   inline style on <html> from DB settings). */
+
+:root {
+  --ink: #161513;
+  --ink-soft: #2b2925;
+  --ivory: #f6f3ee;
+  --porcelain: #fbf9f6;
+  --stone: #8a857c;
+  --stone-deep: #5f5b54;
+  --line: #e4dfd7;
+  --line-dark: #2e2c28;
+  --accent: #a98a5b;
+  --accent-ink: #ffffff;
+  --night: #121110;
+  --night-soft: #1c1a18;
+
+  --font-display: var(--font-display-en), var(--font-display-ar), serif;
+  --font-body: var(--font-body-en), var(--font-body-ar), sans-serif;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ivory: var(--ivory);
+  --color-porcelain: var(--porcelain);
+  --color-stone: var(--stone);
+  --color-stone-deep: var(--stone-deep);
+  --color-line: var(--line);
+  --color-line-dark: var(--line-dark);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--porcelain);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Elegant focus ring — visible for keyboard users, calm for everyone else */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── Typography utilities ─────────────────────────────────────────
+   Uppercase + tracking ONLY for Latin. Arabic is caseless and
+   letter-spacing breaks glyph joining — never apply to :lang(ar). */
+
+.display-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+:lang(ar) .display-heading,
+.display-heading:lang(ar) {
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--stone);
+}
+
+:lang(ar) .eyebrow,
+.eyebrow:lang(ar) {
+  text-transform: none;
+  letter-spacing: 0.06em;
+  font-size: 0.8125rem;
+}
+
+/* ── Motion ─────────────────────────────────────────────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s var(--ease-luxe),
+    transform 0.7s var(--ease-luxe);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Components ─────────────────────────────────────────────────── */
+
+.btn-luxe {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2.25rem;
+  background: var(--ink);
+  color: var(--porcelain);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  border: 1px solid var(--ink);
+  transition: background-color 0.3s var(--ease-luxe), color 0.3s var(--ease-luxe),
+    border-color 0.3s var(--ease-luxe);
+  cursor: pointer;
+}
+
+:lang(ar) .btn-luxe {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 0.875rem;
+}
+
+.btn-luxe:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2.25rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  border: 1px solid var(--ink);
+  transition: background-color 0.3s var(--ease-luxe), color 0.3s var(--ease-luxe);
+  cursor: pointer;
+}
+
+:lang(ar) .btn-outline {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 0.875rem;
+}
+
+.btn-outline:hover {
+  background: var(--ink);
+  color: var(--porcelain);
+}
+
+/* Hairline link with animated underline reveal */
+.link-luxe {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+
+.link-luxe::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: inset-inline-start;
+  transition: transform 0.35s var(--ease-luxe);
+}
+
+.link-luxe:hover::after,
+.link-luxe[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+/* Form fields — hairline, calm */
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0.75rem 0;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  transition: border-color 0.3s var(--ease-luxe);
+}
+
+.field::placeholder {
+  color: var(--stone);
+}
+
+.field:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.field-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--stone);
+  margin-bottom: 0.375rem;
+}
+
+:lang(ar) .field-label {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+}
+
+select.field {
+  appearance: none;
+  background-image: none;
+  cursor: pointer;
+}
+
+/* ── Scrollbar (subtle, desktop) ────────────────────────────────── */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--ivory);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border: 3px solid var(--ivory);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--stone);
+  }
+}
+
+/* ── RTL icon mirroring ─────────────────────────────────────────── */
+[dir='rtl'] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* ── Admin surface (simpler, faster, clearer — same tokens) ─────── */
+.admin-card {
+  background: var(--porcelain);
+  border: 1px solid var(--line);
+}
+
+.admin-input {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+  transition: border-color 0.2s ease;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--stone-deep);
+  margin-bottom: 0.375rem;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--ink);
+  color: var(--porcelain);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-btn:hover {
+  background: var(--ink-soft);
+}
+
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-btn-secondary:hover {
+  border-color: var(--ink);
+}
+
+.admin-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  color: #8c2f2f;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid #e5cfcf;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-btn-danger:hover {
+  background: #8c2f2f;
+  color: #fff;
+  border-color: #8c2f2f;
+}

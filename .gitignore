@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+next-env.d.ts
+
+# Local data (SQLite DB, uploads, generated secrets) — never commit
+data/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Misc
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+tunnel.log
+plans/
