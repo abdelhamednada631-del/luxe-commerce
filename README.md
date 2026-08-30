@@ -21,10 +21,10 @@ On first boot a random admin password is generated and printed **once** in the s
 
 ## Deploying to Railway
 
-The repository ships with a [`Dockerfile`](Dockerfile) (Next.js `output: standalone`) and [`railway.json`](railway.json) — deployment is three steps:
+The repository ships with a [`Dockerfile`](Dockerfile) (multi-stage build; the runner keeps the full `node_modules` so native modules — better-sqlite3, sharp — always resolve) and [`railway.json`](railway.json) — deployment is three steps:
 
 1. **Create the service** — push this repo to GitHub, then in Railway: *New Project → Deploy from GitHub repo*. Railway auto-detects the Dockerfile.
-2. **Attach a volume** — *Service → Settings → Volumes → New Volume*, mount it at `/data`. This persists the SQLite database, uploaded images, and the encryption key file across deploys and restarts.
+2. **Attach a volume** — *Service → Settings → Volumes → New Volume*, mount it at `/data`. This persists the SQLite database, uploaded images, and the encryption key file across deploys and restarts. **Important:** the app uses embedded SQLite on a single volume — keep the service at **1 replica** (scaling horizontally would give each replica its own database).
 3. **Set the public domain** — *Settings → Networking → Generate Domain*. The canonical URL is derived automatically from the Railway public domain for SEO metadata and the sitemap.
 
 Optional environment variables (all have safe defaults — see [`.env.example`](.env.example)):
@@ -52,7 +52,7 @@ Optional environment variables (all have safe defaults — see [`.env.example`](
 ```
 ┌─────────────────────────── One Railway service ───────────────────────────┐
 │                                                                            │
-│  Next.js 15 (App Router, standalone output)                                │
+│  Next.js 15 (App Router, single container)                                 │
 │  ├── /[locale] storefront (EN/AR, RTL-first)                               │
 │  ├── /[locale]/admin dashboard (session-cookie auth)                       │
 │  └── /api/* REST endpoints (public + admin-guarded)                        │
@@ -76,6 +76,8 @@ Optional environment variables (all have safe defaults — see [`.env.example`](
 ### Project layout
 
 ```
+├── messages/                    # en.json + ar.json catalogs (repo root)
+├── public/                      # static assets (reserved — media is DB-served)
 src/
 ├── app/
 │   ├── [locale]/(storefront)/   # home, collections, product, search, cart,
@@ -98,7 +100,6 @@ src/
 │   ├── store/                   # zustand cart + wishlist (persisted)
 │   ├── validation/              # zod schemas shared client + server
 │   └── admin-client.ts          # typed fetch wrapper for admin UI
-├── messages/                    # en.json + ar.json catalogs
 └── styles/                      # Tailwind v4 theme tokens
 ```
 
@@ -124,9 +125,9 @@ src/
 | Command | Purpose |
 |---|---|
 | `npm run dev` | Development server |
-| `npm run build` | Production build (standalone output) |
+| `npm run build` | Production build |
 | `npm run start` | Run the production build |
-| `npx tsc --noEmit` | Type check |
+| `npm run typecheck` | Type check (`tsc --noEmit`) |
 
 ## Tech stack
 

@@ -28,25 +28,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Active products
+  // Active products — real modification time from the DB
   const products = queryProducts({ limit: 1000 }).products;
   for (const p of products) {
+    const lastModified = p.updated_at ? new Date(p.updated_at + 'Z') : now;
     for (const locale of routing.locales) {
       entries.push({
         url: `${base}/${locale}/product/${p.slug}`,
-        lastModified: now,
+        lastModified,
         changeFrequency: 'weekly',
         priority: 0.8
       });
     }
   }
 
-  // Visible collections
+  // Visible collections — real modification time from the DB
   for (const c of visibleCollections()) {
+    const lastModified = c.updated_at ? new Date(c.updated_at + 'Z') : now;
     for (const locale of routing.locales) {
       entries.push({
         url: `${base}/${locale}/collections/${c.slug}`,
-        lastModified: now,
+        lastModified,
         changeFrequency: 'weekly',
         priority: 0.6
       });

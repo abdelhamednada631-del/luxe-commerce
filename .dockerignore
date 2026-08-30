@@ -1,0 +1,36 @@
+# Never sent to the Docker build context — keeps images lean and, critically,
+# keeps local secrets (data/store.db, data/.secrets/, .env) out of image layers.
+
+# VCS / meta
+.git
+.gitignore
+.gitattributes
+
+# Dependencies & build output (rebuilt inside the image)
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+
+# Local data — SQLite DB, uploads, generated secrets. NEVER bake into images.
+data
+data-fresh-test
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & temp/debug artifacts
+*.log
+tmp-*
+
+# Not needed inside the image
+plans
+scripts
+README.md
+SKILLS-SETUP.md
+Dockerfile
+.dockerignore
+railway.json

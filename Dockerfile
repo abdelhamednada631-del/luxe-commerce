@@ -35,4 +35,7 @@ COPY --from=build /app/src/lib/db/migrations ./src/lib/db/migrations
 RUN mkdir -p /data && chown app:app /data
 USER app
 EXPOSE 3000
-CMD ["npm", "start"]
+# Run next directly (not via npm) so it is PID 1 and receives SIGTERM
+# immediately — Railway redeploys drain connections instead of waiting
+# for the grace period to kill npm's child process tree.
+CMD ["node", "node_modules/next/dist/bin/next", "start"]

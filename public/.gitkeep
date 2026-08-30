@@ -1,0 +1,2 @@
+# Keeps the public/ directory in git so the Dockerfile COPY always has a source.
+# Static assets (favicon/logo) are normally served from the DB via /api/media.

@@ -8,16 +8,19 @@ next-env.d.ts
 
 # Local data (SQLite DB, uploads, generated secrets) — never commit
 data/
+data-fresh-test/
 
 # Environment
 .env
 .env.*
 !.env.example
 
+# Temp/debug artifacts
+tmp-*
+*.log
+
 # Misc
 *.tsbuildinfo
 .DS_Store
 Thumbs.db
-tunnel.log
 plans/
-"data-fresh-test/"  
